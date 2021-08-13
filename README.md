@@ -20,6 +20,7 @@ jobs:
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
           participationId: xxx,yyy
+          groupId: zzz,www
           content: |
             @here xxx リリース
 ```
