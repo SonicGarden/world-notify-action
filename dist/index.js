@@ -2269,7 +2269,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const got_1 = __importDefault(__webpack_require__(77));
 function splitIds(ids) {
-    return ids.split(',').map(id => id.trim());
+    return ids
+        .split(',')
+        .map(id => id.trim())
+        .filter(id => id.length > 0);
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -2278,19 +2281,19 @@ function run() {
             const participationIdInput = core.getInput('participationId');
             const groupIdInput = core.getInput('groupId');
             if (!participationIdInput && !groupIdInput) {
-                throw new Error(`participationId or groupId must be set`);
+                throw new Error('participationId or groupId must be set');
             }
             const participationIds = splitIds(participationIdInput);
             const groupIds = splitIds(groupIdInput);
             const content = core.getInput('content', { required: true });
-            const apiUrlBase = 'https://www.sonicgarden.world/room_api/v1';
-            const participationRequests = participationIds.map(participationId => got_1.default.post(`${apiUrlBase}/rooms/participations/${participationId}/comments?token=${token}`, {
+            const API_URL_BASE = 'https://www.sonicgarden.world/room_api/v1';
+            const participationRequests = participationIds.map(participationId => got_1.default.post(`${API_URL_BASE}/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
                     comment: { content }
                 },
                 responseType: 'json'
             }));
-            const groupRequests = groupIds.map(groupId => got_1.default.post(`${apiUrlBase}/groups/${groupId}/entries?token=${token}`, {
+            const groupRequests = groupIds.map(groupId => got_1.default.post(`${API_URL_BASE}/groups/${groupId}/entries?token=${token}`, {
                 json: {
                     entry: { content }
                 },

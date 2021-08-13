@@ -2,7 +2,10 @@ import * as core from '@actions/core'
 import got from 'got'
 
 function splitIds(ids: string): string[] {
-  return ids.split(',').map(id => id.trim())
+  return ids
+    .split(',')
+    .map(id => id.trim())
+    .filter(id => id.length > 0)
 }
 
 async function run(): Promise<void> {
