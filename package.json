@@ -26,7 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "got": "^11.1.2"
+    "got": "^11.8.5"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
