@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ./
         with:
-          token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
-          participationId: 4446,4446
+          token: ${{ secrets.PRO_WORLD_NOTIFY_APP_TOKEN }}
+          participationId: 9406,9406
           content: |
             world-notify-action リリース
