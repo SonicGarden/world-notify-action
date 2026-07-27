@@ -16,7 +16,7 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: SonicGarden/world-notify-action@v1
+      - uses: SonicGarden/world-notify-action@v2
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
           participationId: xxx,yyy
