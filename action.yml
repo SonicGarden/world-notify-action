@@ -13,5 +13,12 @@ inputs:
     description: "Comment content"
     required: true
 runs:
-  using: "node16"
-  main: "dist/index.js"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/notify.mjs"
+      env:
+        WORLD_TOKEN: ${{ inputs.token }}
+        WORLD_PARTICIPATION_ID: ${{ inputs.participationId }}
+        WORLD_GROUP_ID: ${{ inputs.groupId }}
+        WORLD_CONTENT: ${{ inputs.content }}

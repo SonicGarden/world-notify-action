@@ -9,10 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v7
       - uses: ./
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
-          participationId: 4446,4446
+          groupId: 4008
           content: |
             world-notify-action リリース
