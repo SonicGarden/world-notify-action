@@ -3,12 +3,13 @@ description: World Notify
 author: aki77
 inputs:
   token:
-    description: "World token"
-    required: true
+    description: "World token（participationId / groupId を指定する場合は必須）"
   participationId:
     description: "Participation id"
   groupId:
     description: "Group id"
+  groupToken:
+    description: "Group token（Bearer 認証。グループトークン自体が投稿先を示す）"
   content:
     description: "Comment content"
     required: true
@@ -21,4 +22,5 @@ runs:
         WORLD_TOKEN: ${{ inputs.token }}
         WORLD_PARTICIPATION_ID: ${{ inputs.participationId }}
         WORLD_GROUP_ID: ${{ inputs.groupId }}
+        WORLD_GROUP_TOKEN: ${{ inputs.groupToken }}
         WORLD_CONTENT: ${{ inputs.content }}
