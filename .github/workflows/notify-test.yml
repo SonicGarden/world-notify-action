@@ -16,3 +16,8 @@ jobs:
           groupId: 4008
           content: |
             world-notify-action リリース
+      - uses: ./
+        with:
+          groupToken: ${{ secrets.WORLD_GROUP_TOKEN }}
+          content: |
+            world-notify-action リリース（groupToken）
