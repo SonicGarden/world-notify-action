@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-const API_URL_BASE = 'https://www.sonicgarden.world/room_api/v1'
+const ROOM_API_URL_BASE = 'https://www.sonicgarden.world/room_api/v1'
+const GROUP_API_URL = 'https://www.sonicgarden.world/group_api/v1/entries'
 
 /**
  * GitHub Actions のワークフローコマンドで使えない文字をエスケープする。
@@ -35,14 +36,15 @@ function splitIds(ids) {
     .filter(id => id.length > 0)
 }
 
-async function post(url, label, body) {
+async function post(url, label, body, extraHeaders = {}) {
   let res
   try {
     res = await fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        accept: 'application/json'
+        accept: 'application/json',
+        ...extraHeaders
       },
       body: JSON.stringify(body)
     })
@@ -58,15 +60,23 @@ async function post(url, label, body) {
 
 async function run() {
   try {
-    const token = getInput('WORLD_TOKEN', {required: true})
+    const token = getInput('WORLD_TOKEN')
     const participationIdInput = getInput('WORLD_PARTICIPATION_ID')
     const groupIdInput = getInput('WORLD_GROUP_ID')
-    if (!participationIdInput && !groupIdInput) {
-      throw new Error('participationId or groupId must be set')
+    const groupTokenInput = getInput('WORLD_GROUP_TOKEN')
+    if (!participationIdInput && !groupIdInput && !groupTokenInput) {
+      throw new Error('participationId, groupId or groupToken must be set')
     }
 
     const participationIds = splitIds(participationIdInput)
     const groupIds = splitIds(groupIdInput)
+    const groupTokens = splitIds(groupTokenInput)
+    if ((participationIds.length > 0 || groupIds.length > 0) && !token) {
+      throw new Error(
+        'Input required and not supplied: token (participationId / groupId を指定する場合は必須)'
+      )
+    }
+
     const content = getInput('WORLD_CONTENT', {required: true})
 
     const query = `token=${encodeURIComponent(token)}`
@@ -75,7 +85,7 @@ async function run() {
       ...participationIds.map(participationId => {
         const id = encodeURIComponent(participationId)
         return post(
-          `${API_URL_BASE}/rooms/participations/${id}/comments?${query}`,
+          `${ROOM_API_URL_BASE}/rooms/participations/${id}/comments?${query}`,
           `participation ${participationId}`,
           {comment: {content}}
         )
@@ -83,11 +93,20 @@ async function run() {
       ...groupIds.map(groupId => {
         const id = encodeURIComponent(groupId)
         return post(
-          `${API_URL_BASE}/groups/${id}/entries?${query}`,
+          `${ROOM_API_URL_BASE}/groups/${id}/entries?${query}`,
           `group ${groupId}`,
           {entry: {content}}
         )
-      })
+      }),
+      // グループトークンは投稿先のグループを兼ねるため、URL には ID を含めない
+      ...groupTokens.map((groupToken, index) =>
+        post(
+          GROUP_API_URL,
+          `group token #${index + 1}`,
+          {entry: {content}},
+          {authorization: `Bearer ${groupToken}`}
+        )
+      )
     ]
 
     const results = await Promise.allSettled(tasks)
