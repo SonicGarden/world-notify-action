@@ -10,14 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ./
+      - name: groupToken (group_api)
+        uses: ./
+        with:
+          groupToken: ${{ secrets.WORLD_GROUP_TOKEN }}
+          content: |
+            world-notify-action リリース（groupToken）
+      # 旧 room_api のトークンは 401 を返すようになっているため、
+      # ジョブ全体を落とさないよう continue-on-error にしている
+      - name: token + groupId (room_api)
+        uses: ./
+        continue-on-error: true
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
           groupId: 4008
           content: |
             world-notify-action リリース
-      - uses: ./
-        with:
-          groupToken: ${{ secrets.WORLD_GROUP_TOKEN }}
-          content: |
-            world-notify-action リリース（groupToken）
