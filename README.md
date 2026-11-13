@@ -2,6 +2,17 @@
 
 WorldにコメントするGitHub Actions
 
+> [!IMPORTANT]
+> このアクションには World のトークン（呼び出し側の Secrets）を渡します。
+> タグやブランチ（`@v2` / `@master`）ではなく、**コミットハッシュで固定**して使ってください。
+> ハッシュは [Releases](https://github.com/SonicGarden/world-notify-action/releases) のタグから確認できます。
+>
+> ```yaml
+> - uses: SonicGarden/world-notify-action@<commit-sha> # v2.1.0
+> ```
+>
+> `groupToken` は v2.1.0 以降で使えます（v2.0.0 以前は未対応）。
+
 ## Usage
 
 ### グループトークンで投稿する（推奨）
